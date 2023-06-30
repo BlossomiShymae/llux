@@ -1,0 +1,14 @@
+[package]
+name = "llux"
+version = "0.1.0"
+edition = "2021"
+
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+irelia = { version = "0.3.1", features = ["ws"] }
+serde_json = { version = "1.0.99" }
+clap = { version = "4.3.10", features = ["derive"] }
+owo-colors = { version = "3.5.0" }
+tokio = { version = "1.29.1", features = ["full"] }

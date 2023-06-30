@@ -2,6 +2,8 @@
 name = "llux"
 version = "0.1.0"
 edition = "2021"
+authors = ["Blossomi Shymae"]
+description = "Transfer data to the LCU API without any code setup, hehe!"
 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

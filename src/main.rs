@@ -24,6 +24,9 @@ enum RequestMethod {
 
 #[tokio::main]
 async fn main() -> Result<(), LCUError> {
+    #[cfg(windows)]
+    let _enabled = colored_json::enable_ansi_support();
+
     let args = Cli::parse();
     let client = RequestClient::new();
     let res = match LCUClient::new(&client) {
@@ -38,5 +41,10 @@ async fn main() -> Result<(), LCUError> {
         }
         Err(e) => Err(e),
     };
-    res.map(|v| println!("{:?}", v)).map_err(|e| e)
+    res.map(|v| {
+        v.map_or((), |v| {
+            println!("{}", colored_json::to_colored_json_auto(&v).unwrap())
+        })
+    })
+    .map_err(|e| e)
 }

@@ -614,6 +614,7 @@ version = "0.1.0"
 dependencies = [
  "clap",
  "colored_json",
+ "data-encoding",
  "irelia",
  "miette",
  "owo-colors",

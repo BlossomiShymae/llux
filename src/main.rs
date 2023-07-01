@@ -1,8 +1,11 @@
 use clap::{Parser, ValueEnum};
 use colored_json::to_colored_json_auto;
+use data_encoding::BASE64;
 use irelia::{rest::LCUClient, RequestClient};
 use miette::{miette, Result};
+use owo_colors::OwoColorize;
 use serde_json::{json, Value};
+use std::str;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -10,8 +13,12 @@ struct Cli {
     #[arg(short = 'X', long = "request", value_enum, default_value_t=RequestMethod::Get)]
     #[arg(help = "Use request method")]
     request: RequestMethod,
+    #[arg(long = "info")]
+    #[arg(help = "Display port and authentication")]
+    info: bool,
+    #[arg(required_unless_present = "info")]
     #[arg(help = "The LCU resource path e.g. '/lol-summoner/v1/current-summoner'")]
-    path: String,
+    path: Option<String>,
     #[arg(long = "json")]
     #[arg(help = "Send JSON data")]
     json: Option<String>,
@@ -41,10 +48,31 @@ async fn main() -> Result<()> {
         return Err((miette!("{}", err)).wrap_err("when connecting to LCU"));
     };
 
+    // Display port and auth only
+    if args.info {
+        println!("{}: {}", "host".bright_purple(), client.url());
+        println!(
+            "{}: {}",
+            "authorization".bright_purple(),
+            client.auth_header()
+        );
+        let auth: Vec<&str> = client.auth_header().split("Basic ").collect();
+        let auth = auth.last().unwrap();
+        let decoded = BASE64.decode(auth.as_bytes()).unwrap();
+        let decoded = str::from_utf8(decoded.as_slice()).unwrap();
+        println!(
+            "{}: Basic {}",
+            "authorization (decoded)".bright_purple(),
+            decoded.bright_yellow().on_black()
+        );
+        return Ok(());
+    }
+
     // Parse the LCU resource path ⚙
-    let parts: Vec<&str> = args.path.as_str().split("//").collect();
+    let path = args.path.unwrap();
+    let parts: Vec<&str> = path.as_str().split("//").collect();
     let Some(path) = parts.last() else {
-        let err = args.path.as_str();
+        let err = path.as_str();
         return Err((miette!("{}", err)).wrap_err("when processing path"));
     };
     let path = format!("/{path}");

@@ -1,6 +1,5 @@
 use clap::Parser;
 use colored_json::to_colored_json_auto;
-use data_encoding::BASE64;
 use futures_util::StreamExt;
 use irelia::{
     rest::LCUClient,
@@ -8,11 +7,12 @@ use irelia::{
     RequestClient,
 };
 use miette::{miette, Result};
-use owo_colors::OwoColorize;
 use serde_json::{json, Value};
 use std::{ops::Deref, str};
 
 use cli::{ewrap, Cli};
+
+use crate::rest::ClientInfo;
 
 pub mod cli;
 pub mod rest;
@@ -34,21 +34,7 @@ async fn main() -> Result<()> {
 
     // Display port and auth only
     if args.info {
-        println!("{}: {}", "host".bright_purple(), client.url());
-        println!(
-            "{}: {}",
-            "authorization".bright_purple(),
-            client.auth_header()
-        );
-        let auth: Vec<&str> = client.auth_header().split("Basic ").collect();
-        let auth = auth.last().unwrap();
-        let decoded = BASE64.decode(auth.as_bytes()).unwrap();
-        let decoded = str::from_utf8(decoded.as_slice()).unwrap();
-        println!(
-            "{}: Basic {}",
-            "authorization (decoded)".bright_purple(),
-            decoded.bright_yellow().on_black()
-        );
+        println!("{}", ClientInfo::from(&client));
         return Ok(());
     }
 

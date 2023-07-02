@@ -12,9 +12,10 @@ use owo_colors::OwoColorize;
 use serde_json::{json, Value};
 use std::{ops::Deref, str};
 
-use cli::{Cli, RequestMethod};
+use cli::Cli;
 
 pub mod cli;
+pub mod rest;
 pub mod ws;
 
 #[tokio::main]
@@ -106,14 +107,7 @@ async fn main() -> Result<()> {
 
     // Send request to the LCU 💜
     let path = path.as_str();
-    let res = match args.request {
-        RequestMethod::Get => client.get::<Value>(path).await,
-        RequestMethod::Delete => client.delete::<Value>(path).await,
-        RequestMethod::Head => client.head::<Value>(path).await,
-        RequestMethod::Post => client.post::<Value, Value>(path, body).await,
-        RequestMethod::Put => client.put::<Value, Value>(path, body).await,
-        RequestMethod::Patch => client.patch::<Value, Value>(path, body).await,
-    };
+    let res = rest::send_request(&client, args.request, path, body).await;
     let message = match res {
         Ok(value) => {
             let value = value.map_or(json!("undefined"), |v| v);

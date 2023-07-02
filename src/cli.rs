@@ -1,5 +1,8 @@
+use std::ops::Deref;
+
 use clap::{Parser, ValueEnum};
 use miette::miette;
+use serde_json::Value;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -16,6 +19,54 @@ pub struct Cli {
     #[arg(long = "json")]
     #[arg(help = "Send JSON data")]
     pub json: Option<String>,
+}
+
+pub enum Protocol {
+    Rest(String),
+    WSS(String),
+}
+
+impl Cli {
+    fn path_parts(&self) -> Vec<String> {
+        let path = self.path.clone().unwrap();
+        path.as_str().split("//").map(str::to_string).collect()
+    }
+
+    fn parsed_path(&self) -> Result<String, miette::ErrReport> {
+        match self.path_parts().last() {
+            Some(path) => Ok(path.to_string()),
+            None => ewrap(self.path.clone().unwrap().as_str(), "when processing path"),
+        }
+    }
+
+    pub fn protocol(&self) -> Result<Protocol, miette::ErrReport> {
+        let path = self.parsed_path()?;
+        match self.path_parts().first() {
+            Some(protocol) => match protocol.deref() {
+                "wss:" => Ok(Protocol::WSS(path)),
+                _ => Ok(Protocol::Rest(path)),
+            },
+            None => ewrap(&path, "when processing protocol"),
+        }
+    }
+
+    pub fn rest_path(&self) -> Result<String, miette::ErrReport> {
+        let path = self.parsed_path()?;
+        Ok(format!("/{path}"))
+    }
+
+    pub fn request_body(&self) -> Result<Option<Value>, miette::ErrReport> {
+        match &self.json {
+            Some(string) => {
+                let value = serde_json::from_str::<Value>(string.as_str());
+                match value {
+                    Ok(value) => Ok(Some(value)),
+                    Err(_) => ewrap("Bad JSON input", "when serializing body"),
+                }
+            }
+            None => Ok(None),
+        }
+    }
 }
 
 #[derive(ValueEnum, Debug, Clone)]

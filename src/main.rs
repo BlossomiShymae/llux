@@ -12,7 +12,7 @@ use owo_colors::OwoColorize;
 use serde_json::{json, Value};
 use std::{ops::Deref, str};
 
-use cli::Cli;
+use cli::{ewrap, Cli};
 
 pub mod cli;
 pub mod rest;
@@ -29,7 +29,7 @@ async fn main() -> Result<()> {
     let client = LCUClient::new(&r_client);
     let Ok(client) = client else {
         let err = client.err().unwrap().to_string();
-        return Err((miette!("{}", err)).wrap_err("when connecting to LCU"));
+        return ewrap(&err, "when connecting to the LCU");
     };
 
     // Display port and auth only
@@ -57,11 +57,11 @@ async fn main() -> Result<()> {
     let parts: Vec<&str> = path.as_str().split("//").collect();
     let Some(path) = parts.last() else {
         let err = path.as_str();
-        return Err((miette!("{}", err)).wrap_err("when processing path"));
+        return ewrap(&err, "when processing path");
     };
     let Some(event) = parts.first() else {
         let err = path;
-        return Err((miette!("{}", err)).wrap_err("when processing path"));
+        return ewrap(&err, "when processing path");
     };
     match event.deref().deref() {
         "wss:" => {
@@ -79,7 +79,7 @@ async fn main() -> Result<()> {
                     }
                 }
                 Err(e) => {
-                    return Err(miette!("{}", e.to_string()).wrap_err("when creating websocket"));
+                    return ewrap(&e.to_string(), "when creating websocket");
                 }
             }
         }
@@ -95,7 +95,7 @@ async fn main() -> Result<()> {
                     serde_json::from_str::<Value>(json_string.as_str());
                 match value {
                     Ok(value) => Ok(Some(value)),
-                    Err(_) => Err((miette!("Bad JSON input")).wrap_err("when serializing body")),
+                    Err(_) => ewrap("Bad JSON input", "when serializing body"),
                 }
             }
             None => Ok(None),
@@ -112,9 +112,9 @@ async fn main() -> Result<()> {
         Ok(value) => {
             let value = value.map_or(json!("undefined"), |v| v);
             to_colored_json_auto(&value)
-                .map_err(|e| (miette!("{}", e.to_string())).wrap_err("when pretty printing JSON"))
+                .map_err(|e| ewrap::<()>(&e.to_string(), "when pretty printing JSON").unwrap_err())
         }
-        Err(e) => Err(miette!("{}", e.to_string()).wrap_err("when processing LCU request")),
+        Err(e) => ewrap(&e.to_string(), "when processing LCU request"),
     };
 
     // End program 🌮

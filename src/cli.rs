@@ -1,4 +1,5 @@
 use clap::{Parser, ValueEnum};
+use miette::miette;
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -25,4 +26,8 @@ pub enum RequestMethod {
     Delete,
     Patch,
     Head,
+}
+
+pub fn ewrap<T>(err: &str, msg: &'static str) -> Result<T, miette::ErrReport> {
+    Err((miette!("{}", err)).wrap_err(msg))
 }

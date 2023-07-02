@@ -96,7 +96,7 @@ async fn main() -> Result<()> {
                         let Ok(value) = event else {
                             return Err((miette!("{}", event.err().unwrap().to_string())).wrap_err("when processing websocket"));
                         };
-                        let wsm = ws::WebSocketMessage::from_value(value.clone());
+                        let wsm = ws::WebSocketMessage::from(&value);
                         let message = to_colored_json_auto(&json!(wsm)).unwrap();
                         println!("{}", message);
                     }

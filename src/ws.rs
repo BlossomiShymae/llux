@@ -13,23 +13,27 @@ pub struct WebSocketMessage {
     pub timestamp: u128,
 }
 
-impl WebSocketMessage {
-    pub fn from_value(v: Value) -> WebSocketMessage {
-        let message = v.as_array().unwrap();
+impl From<&Value> for WebSocketMessage {
+    fn from(value: &Value) -> Self {
+        let message = value.as_array().unwrap();
         let opcode = message.get(0).unwrap().as_i64().unwrap();
         let event: String = message.get(1).unwrap().as_str().unwrap().into();
-        let payload: WebSocketPayload =
-            serde_json::from_value(message.get(2).unwrap().clone()).unwrap();
-        WebSocketMessage {
+        let WebSocketPayload {
+            data,
+            uri,
+            event_type,
+        } = serde_json::from_value(message.get(2).unwrap().clone()).unwrap();
+        let timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_millis();
+        Self {
             opcode,
             event,
-            data: payload.data,
-            uri: payload.uri,
-            event_type: payload.event_type,
-            timestamp: SystemTime::now()
-                .duration_since(UNIX_EPOCH)
-                .unwrap()
-                .as_millis(),
+            data,
+            uri,
+            event_type,
+            timestamp,
         }
     }
 }

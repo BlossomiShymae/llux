@@ -1,4 +1,4 @@
-use clap::{Parser, ValueEnum};
+use clap::Parser;
 use colored_json::to_colored_json_auto;
 use data_encoding::BASE64;
 use futures_util::StreamExt;
@@ -12,34 +12,10 @@ use owo_colors::OwoColorize;
 use serde_json::{json, Value};
 use std::{ops::Deref, str};
 
+use cli::{Cli, RequestMethod};
+
+pub mod cli;
 pub mod ws;
-
-#[derive(Parser, Debug)]
-#[command(author, version, about, long_about = None)]
-struct Cli {
-    #[arg(short = 'X', long = "request", value_enum, default_value_t=RequestMethod::Get)]
-    #[arg(help = "Use request method")]
-    request: RequestMethod,
-    #[arg(long = "info")]
-    #[arg(help = "Display port and authentication")]
-    info: bool,
-    #[arg(required_unless_present = "info")]
-    #[arg(help = "The LCU resource path e.g. '/lol-summoner/v1/current-summoner'")]
-    path: Option<String>,
-    #[arg(long = "json")]
-    #[arg(help = "Send JSON data")]
-    json: Option<String>,
-}
-
-#[derive(ValueEnum, Debug, Clone)]
-enum RequestMethod {
-    Get,
-    Post,
-    Put,
-    Delete,
-    Patch,
-    Head,
-}
 
 #[tokio::main]
 async fn main() -> Result<()> {

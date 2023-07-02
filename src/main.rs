@@ -38,11 +38,16 @@ async fn main() -> Result<()> {
     }
 
     let protocol = cli.protocol()?;
-    if let cli::Protocol::WSS(_event) = protocol {
+    if let cli::Protocol::WSS(event) = protocol {
         // Listen to WebSocket event
         match LCUWebSocket::new().await {
             Ok(mut ws) => {
-                ws.subscribe(EventType::OnJsonApiEvent);
+                let event = match event.as_str() {
+                    "OnJsonApiEvent" => Ok(EventType::OnJsonApiEvent),
+                    "OnLcdEvent" => Ok(EventType::OnLcdEvent),
+                    _ => ewrap(&event, "when processing websocket event"),
+                };
+                ws.subscribe(event?);
                 while let Some(event) = ws.next().await {
                     let Ok(value) = event else {
                             return Err((miette!("{}", event.err().unwrap().to_string())).wrap_err("when processing websocket"));

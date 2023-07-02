@@ -52,7 +52,16 @@ impl Cli {
 
     pub fn rest_path(&self) -> Result<String, miette::ErrReport> {
         let path = self.parsed_path()?;
-        Ok(format!("/{path}"))
+        match path.chars().next() {
+            Some(char) => {
+                if char.eq(&'/') {
+                    Ok(path)
+                } else {
+                    Ok(format!("/{path}"))
+                }
+            }
+            None => ewrap(&path, "when processing rest path"),
+        }
     }
 
     pub fn request_body(&self) -> Result<Option<Value>, miette::ErrReport> {

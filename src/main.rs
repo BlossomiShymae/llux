@@ -6,12 +6,13 @@ use irelia::{
     ws::{EventType, LCUWebSocket},
     RequestClient,
 };
-use miette::{miette, Result};
+use miette::Result;
 use serde_json::json;
 
 use cli::{ewrap, Cli};
 
 use crate::rest::ClientInfo;
+use crate::ws::{MinimalMessage, VerboseMessage, WebSocketMessage};
 
 pub mod cli;
 pub mod rest;
@@ -50,11 +51,13 @@ async fn main() -> Result<()> {
                 ws.subscribe(event?);
                 while let Some(event) = ws.next().await {
                     let Ok(value) = event else {
-                            return Err((miette!("{}", event.err().unwrap().to_string())).wrap_err("when processing websocket"));
-                        };
-                    let wsm = ws::WebSocketMessage::from(&value);
-                    let message = to_colored_json_auto(&json!(wsm)).unwrap();
-                    println!("{}", message);
+                        return ewrap(&event.err().unwrap().to_string(), "when processing websocket");
+                    };
+                    let wsm = WebSocketMessage::from(&value);
+                    match cli.verbose {
+                        true => println!("{}", VerboseMessage::from(&wsm)),
+                        false => println!("{}", MinimalMessage::from(&wsm)),
+                    };
                 }
             }
             Err(e) => {

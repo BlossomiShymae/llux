@@ -19,6 +19,9 @@ pub struct Cli {
     #[arg(long = "json")]
     #[arg(help = "Send JSON data")]
     pub json: Option<String>,
+    #[arg(short = 'v', long = "verbose")]
+    #[arg(help = "Print detailed data")]
+    pub verbose: bool,
 }
 
 pub enum Protocol {

@@ -1,12 +1,12 @@
 # llux
 
-![llux_logo](https://github.com/BlossomiShymae/llux/assets/87099578/f2c3f85f-cff2-4d87-80b4-0abe2ecfbeb0)
+![llux_logo](https://github.com/BlossomiShymae/llux/assets/87099578/21cf6845-426f-4567-a73e-78311f6f4de7)
 
 llux (short for LCU Lux) is an open-source CLI tool to easily transfer data with the LCU without any script or code setup, hehe!
 
 ## Preview
 
-![llux-preview](https://github.com/BlossomiShymae/llux/assets/87099578/7c8ffe43-68ca-4556-8031-db9af937e4eb)
+![llux-preview](https://github.com/BlossomiShymae/llux/assets/87099578/5ac037f2-5b51-440b-87a2-de277a103bdd)
 
 ## Download
 

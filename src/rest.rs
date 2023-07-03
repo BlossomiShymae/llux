@@ -34,7 +34,7 @@ impl Display for ClientInfo {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f, "{}: {}", "host".bright_purple(), self.host)?;
         writeln!(f, "{}: {}", "authorization".bright_purple(), self.auth)?;
-        writeln!(
+        write!(
             f,
             "{}: Basic {}",
             "authorization (decoded)".bright_purple(),

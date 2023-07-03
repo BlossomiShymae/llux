@@ -7,23 +7,25 @@ use serde_json::Value;
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 pub struct Cli {
-    #[arg(short = 'X', long = "request", value_enum, default_value_t=RequestMethod::Get)]
-    #[arg(help = "Use request method")]
-    pub request: RequestMethod,
-    #[arg(long = "info")]
-    #[arg(help = "Display port and authentication")]
-    pub info: bool,
     #[arg(required_unless_present = "info")]
-    #[arg(help = "The LCU resource path e.g. '/lol-summoner/v1/current-summoner'")]
+    #[arg(
+        help = "The resource path or event to listen e.g. //lol-summoner/v1/current-summoner or wss://OnJsonApiEvent"
+    )]
     pub path: Option<String>,
+    #[arg(long = "info")]
+    #[arg(help = "Display port and authorization")]
+    pub info: bool,
+    #[arg(short = 'X', long = "request", value_enum, default_value_t=RequestMethod::Get)]
+    #[arg(help = "Use request method (REST only)")]
+    pub request: RequestMethod,
     #[arg(long = "json")]
-    #[arg(help = "Send JSON data")]
+    #[arg(help = "Send JSON data (REST only)")]
     pub json: Option<String>,
     #[arg(short = 'v', long = "verbose")]
-    #[arg(help = "Print detailed data")]
+    #[arg(help = "Print detailed data (WebSocket only)")]
     pub verbose: bool,
     #[arg(long = "filter")]
-    #[arg(help = "Filter WebSocket event URI (case-sensitive)")]
+    #[arg(help = "Filter event URI (case-sensitive) (WebSocket only)")]
     pub filter: Option<String>,
 }
 

@@ -22,6 +22,9 @@ pub struct Cli {
     #[arg(short = 'v', long = "verbose")]
     #[arg(help = "Print detailed data")]
     pub verbose: bool,
+    #[arg(long = "filter")]
+    #[arg(help = "Filter WebSocket event URI (case-sensitive)")]
+    pub filter: Option<String>,
 }
 
 pub enum Protocol {

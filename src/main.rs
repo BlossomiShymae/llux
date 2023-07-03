@@ -54,9 +54,24 @@ async fn main() -> Result<()> {
                         return ewrap(&event.err().unwrap().to_string(), "when processing websocket");
                     };
                     let wsm = WebSocketMessage::from(&value);
+                    // I don't know about this... :c
                     match cli.verbose {
-                        true => println!("{}", VerboseMessage::from(&wsm)),
-                        false => println!("{}", MinimalMessage::from(&wsm)),
+                        true => match &cli.filter {
+                            Some(name) => {
+                                if wsm.uri.contains(name) {
+                                    println!("{}", VerboseMessage::from(&wsm))
+                                }
+                            }
+                            None => println!("{}", VerboseMessage::from(&wsm)),
+                        },
+                        false => match &cli.filter {
+                            Some(name) => {
+                                if wsm.uri.contains(name) {
+                                    println!("{}", MinimalMessage::from(&wsm));
+                                }
+                            }
+                            None => println!("{}", MinimalMessage::from(&wsm)),
+                        },
                     };
                 }
             }

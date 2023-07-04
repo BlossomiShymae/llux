@@ -4,6 +4,9 @@ version = "0.1.0"
 edition = "2021"
 authors = ["Blossomi Shymae"]
 description = "Transfer data to the LCU API without any code setup, hehe!"
+repository = "https://github.com/BlossomiShymae/llux"
+license = "GPL-3.0-only"
+keywords = ["lcu", "lcu-api"]
 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

@@ -14,6 +14,7 @@ mkdir -p ./dist
 cp LICENSE ./dist
 cp README.md ./dist
 cp CHANGELOG.md ./dist
+cp preview.gif ./dist
 cp ./target/release/llux.exe ./dist
 
 # Time to pack :ayaya:

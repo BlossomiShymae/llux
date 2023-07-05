@@ -6,7 +6,7 @@ llux (short for LCU Lux) is an open-source CLI tool to easily transfer data with
 
 ## Preview
 
-![llux-preview](https://github.com/BlossomiShymae/llux/assets/87099578/5ac037f2-5b51-440b-87a2-de277a103bdd)
+![llux-preview](preview.gif)
 
 ## Download
 

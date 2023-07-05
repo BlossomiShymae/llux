@@ -24,6 +24,7 @@ async fn main() -> Result<()> {
         return ewrap(&err, "when connecting to the LCU");
     };
 
+    // Process given subcommand 💿
     let status = match cli.command {
         // Display port and authorization only
         Commands::Info => {
@@ -31,6 +32,7 @@ async fn main() -> Result<()> {
         }
         // Subscribe to WebSocket event and listen for data
         Commands::Subscribe(args) => args.execute().await?,
+        // Send an HTTP request
         Commands::Request(args) => args.execute(&client).await?,
     };
     Ok(status)

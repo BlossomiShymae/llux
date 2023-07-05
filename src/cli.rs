@@ -56,7 +56,6 @@ impl RequestArgs {
             Err(e) => ewrap(&e.to_string(), "when processing LCU request"),
         };
 
-        // End program 🌮
         let m = message?;
         println!("{}", m);
         Ok(())

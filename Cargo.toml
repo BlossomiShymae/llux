@@ -12,6 +12,7 @@ keywords = ["lcu", "lcu-api"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+time = "0.2.23" # CVE-2020-26235
 irelia = { version = "0.3.1", features = ["ws", "tauri"] }
 serde_json = { version = "1.0.99" }
 serde = { version = "1.0", features = ["derive"] }

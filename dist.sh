@@ -1,6 +1,7 @@
 #!/bin/bash
 # A script to build and pack an executable with README, LICENSE, etc. for
 # distribution. 💚
+DIST=./dist
 
 cargo build --release
 
@@ -10,14 +11,10 @@ VERSION=$(awk '/version/' Cargo.toml | head -n1 | cut -d '"' -f2)
 NAME=llux_${VERSION}_${TARGET}
 
 # Copy contents
-mkdir -p ./dist
-cp LICENSE ./dist
-cp README.md ./dist
-cp CHANGELOG.md ./dist
-cp preview.gif ./dist
-cp ./target/release/llux.exe ./dist
+mkdir -p "${DIST}"
+cp LICENSE README.md CHANGELOG.md preview.gif ./target/release/llux.exe "${DIST}"
 
 # Time to pack :ayaya:
-rm -f ./dist/*.zip
-zip -r -j "${NAME}".zip ./dist/*
-mv "${NAME}".zip ./dist
+rm -f "${DIST}"/*.zip
+zip -r -j "${NAME}".zip "${DIST}"/*
+mv "${NAME}".zip "${DIST}"

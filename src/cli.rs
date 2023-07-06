@@ -36,7 +36,10 @@ pub struct RequestArgs {
         default_value_t=RequestMethod::Get
     )]
     request: RequestMethod,
-    #[arg(long = "json", help = "Send JSON data")]
+    #[arg(
+        long = "json",
+        help = r#"Send JSON data e.g. '{"example": "data"}', '["example"]'"#
+    )]
     json: Option<String>,
 }
 

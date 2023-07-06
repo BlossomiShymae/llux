@@ -36,7 +36,10 @@ pub struct RequestArgs {
         default_value_t=RequestMethod::Get
     )]
     request: RequestMethod,
-    #[arg(long = "json", help = "Send JSON data")]
+    #[arg(
+        long = "json",
+        help = r#"Send JSON data e.g. '{"example": "data"}', '["example"]'"#
+    )]
     json: Option<String>,
 }
 
@@ -110,7 +113,11 @@ pub struct SubscribeArgs {
     event: String,
     #[arg(long = "filter", help = "Filter event URI (case-sensitive)")]
     filter: Option<String>,
-    #[arg(short = 'v', long = "verbose", help = "Print detailed data")]
+    #[arg(
+        short = 'v',
+        long = "verbose",
+        help = "Print detailed data that includes the event payload"
+    )]
     verbose: bool,
 }
 

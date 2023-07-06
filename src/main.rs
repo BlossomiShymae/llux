@@ -13,7 +13,14 @@ pub mod ws;
 #[tokio::main]
 async fn main() -> Result<()> {
     #[cfg(windows)]
-    let _enabled = colored_json::enable_ansi_support();
+    {
+        let enabled = colored_json::enable_ansi_support();
+        if let Err(()) = enabled {
+            println!(
+                "Failed to enable ANSI mode. You will not be able to see pretty colors, so sad..."
+            )
+        }
+    }
 
     // Start up the LCU client 🚀
     let cli = Cli::parse();

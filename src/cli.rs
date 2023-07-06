@@ -113,7 +113,11 @@ pub struct SubscribeArgs {
     event: String,
     #[arg(long = "filter", help = "Filter event URI (case-sensitive)")]
     filter: Option<String>,
-    #[arg(short = 'v', long = "verbose", help = "Print detailed data")]
+    #[arg(
+        short = 'v',
+        long = "verbose",
+        help = "Print detailed data that includes the event payload"
+    )]
     verbose: bool,
 }
 

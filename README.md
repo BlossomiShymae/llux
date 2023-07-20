@@ -15,7 +15,10 @@ llux (short for LCU Lux) is an open-source CLI tool to easily transfer data with
 llux can be alternatively installed using **cargo** from the master branch:
 
 ```bash
-cargo install --git https://github.com/BlossomiShymae/llux
+# Install nightly if not done so
+rustup toolchain install nightly
+# Install llux
+cargo +nightly install --git https://github.com/BlossomiShymae/llux
 ```
 
 ## Contributors

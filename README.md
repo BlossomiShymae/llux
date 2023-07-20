@@ -12,12 +12,15 @@ llux (short for LCU Lux) is an open-source CLI tool to easily transfer data with
 
 [llux can be downloaded from the latest release as an executable! Currently Windows only (x86_64-pc-windows-msvc).](https://github.com/BlossomiShymae/llux/releases)
 
-llux can be alternatively installed using **cargo** from the master branch:
+llux can be alternatively installed using **cargo** from the master branch.
 
+Install nightly since llux depends on unstable features:
 ```bash
-# Install nightly if not done so
 rustup toolchain install nightly
-# Install llux
+```
+
+Install llux:
+```bash
 cargo +nightly install --git https://github.com/BlossomiShymae/llux
 ```
 

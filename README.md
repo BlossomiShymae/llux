@@ -21,7 +21,7 @@ rustup toolchain install nightly
 
 Install llux:
 ```bash
-cargo +nightly install --git https://github.com/BlossomiShymae/llux
+export RUSTFLAGS="-C target-cpu=native"; cargo +nightly install --locked --git https://github.com/BlossomiShymae/llux
 ```
 
 ## Contributors
